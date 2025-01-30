@@ -15,20 +15,77 @@
 }
 
 .login-box {
-  background-color: #2d2d2d;
+  background: linear-gradient(145deg, #2d2d2d, #1a1a1a); /* Dark gradient background */
   padding: 30px;
-  border-radius: 10px;
-  box-shadow: 0 0 20px rgba(0, 0, 0, 0.3);
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4); /* Subtle shadow for depth */
   width: 100%;
   max-width: 400px;
+  color: #fff; /* White text for contrast */
+  font-family: 'Arial', sans-serif;
 }
 
-h2 {
-  color: #ffffff;
+.login-box h2 {
   text-align: center;
-  margin-bottom: 30px;
-  font-size: 24px;
+  font-size: 1.8rem;
+  margin-bottom: 20px;
+  font-weight: bold;
+  color: #f2f2f2; /* Light color for the heading */
 }
+
+.login-box .input-field {
+  width: 100%;
+  padding: 12px;
+  margin-bottom: 20px;
+  background-color: #333; /* Dark input fields */
+  color: #fff;
+  border: 1px solid #555;
+  border-radius: 6px;
+  font-size: 1rem;
+  transition: border-color 0.3s ease;
+}
+
+.login-box .input-field:focus {
+  outline: none;
+  border-color: #00bcd4; /* Accent color for focused fields */
+}
+
+.login-box .input-field::placeholder {
+  color: #bbb; /* Lighter placeholder text */
+}
+
+.login-box button {
+  width: 100%;
+  padding: 12px;
+  background-color: #00bcd4; /* Accent color for the button */
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.login-box button:hover {
+  background-color: #0097a7; /* Darker shade on hover */
+}
+
+.login-box .forgot-password {
+  text-align: center;
+  margin-top: 15px;
+  font-size: 0.9rem;
+}
+
+.login-box .forgot-password a {
+  color: #00bcd4;
+  text-decoration: none;
+  transition: color 0.3s ease;
+}
+
+.login-box .forgot-password a:hover {
+  color: #0097a7; /* Accent color on hover */
+}
+
 
 .error-message {
   background-color: #ff44336e;

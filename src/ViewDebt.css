@@ -1,39 +1,122 @@
 /* Container and Background */
 .view-debt-container {
-    max-width: 1200px;
-    margin: 40px auto;
-    padding: 30px;
-    background-color: #f9f9f9; /* Light background for the container */
-    border-radius: 12px; /* Rounded corners for a modern look */
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1); /* Light shadow for depth */
-    font-family: 'Arial', sans-serif;
-  }
-  
-  /* Heading */
+  max-width: 1200px;
+  margin: 40px auto;
+  padding: 30px;
+  background-color: #dfdfdf; /* Light background for the container */
+  border-radius: 12px; /* Rounded corners for a modern look */
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1); /* Light shadow for depth */
+  font-family: 'Arial', sans-serif;
+}
 
-  
-  /* Button styling */
+h2 {
+  font-size: 24px;
+  margin-bottom: 20px;
+}
+
+/* Table Styling */
+.debt-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 20px;
+  color: #333;
+}
+
+.debt-table th,
+.debt-table td {
+  padding: 12px 15px;
+  text-align: left;
+  border-bottom: 10px solid #e0e0e0;
+}
+
+.debt-table th {
+  background-color: #a6a6af;
+  font-weight: bold;
+  padding: 10px;
+}
+
+.debt-table tr:hover {
+  background-color: #f1f1f1;
+}
+
+.debt-table td {
+  font-size: 14px;
+}
+
+.debt-table td:nth-child(3),
+.debt-table td:nth-child(5) {
+  color: #00796b;
+  font-weight: bold;
+}
+
+.debt-table td:nth-child(6) {
+  text-transform: capitalize;
+}
+
+.debt-table td,
+.debt-table th {
+  border-radius: 6px;
+}
+
+.debt-table tbody tr:last-child td {
+  border-bottom: none;
+}
+
+/* Button Styling */
+.back-btn {
+  background-color: #4e73df; /* Blue background for the button */
+  color: white;
+  padding: 12px 25px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  display: block;
+  width: 180px;
+  margin: 30px auto;
+  font-size: 16px;
+  text-align: center;
+  transition: background-color 0.3s, transform 0.3s; /* Smooth transitions */
+}
+
+.back-btn:hover {
+  background-color: #3e5bbf; /* Darker blue when hovering */
+  transform: translateY(-3px); /* Button lift effect */
+}
+
+.back-btn:active {
+  transform: translateY(1px); /* Button pressed effect */
+}
+
+/* Responsive Styling */
+@media (max-width: 768px) {
+  .debt-table th, .debt-table td {
+    font-size: 12px;
+  }
+
+  .view-debt-container {
+    padding: 10px;
+  }
+
   .back-btn {
-    background-color: #4e73df; /* Blue background for the button */
-    color: white;
-    padding: 12px 25px;
-    border: none;
-    border-radius: 6px;
-    cursor: pointer;
+    width: 100%;
+    padding: 12px;
+    margin-top: 20px;
+  }
+
+  .debt-table {
     display: block;
-    width: 180px;
-    margin: 30px auto;
-    font-size: 16px;
-    text-align: center;
-    transition: background-color 0.3s, transform 0.3s; /* Smooth transitions */
+    overflow-x: auto;
+    white-space: nowrap;
   }
-  
-  .back-btn:hover {
-    background-color: #3e5bbf; /* Darker blue when hovering */
-    transform: translateY(-3px); /* Button lift effect */
+}
+
+@media (max-width: 480px) {
+  .debt-table th, .debt-table td {
+    padding: 8px;
+    font-size: 12px;
   }
-  
-  .back-btn:active {
-    transform: translateY(1px); /* Button pressed effect */
+
+  h2 {
+    font-size: 20px;
   }
-  
+}

@@ -38,6 +38,9 @@ function AdminDashboard() {
       setUsers(snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() })));
     });
 
+
+  
+
     // Real-time listener for debts collection
     const unsubscribeDebts = onSnapshot(collection(db, "debts"), (snapshot) => {
       setDebts(snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() })));
@@ -54,13 +57,19 @@ function AdminDashboard() {
       .filter((debt) => debt.userId === userId && debt.status === "unpaid")
       .reduce((total, debt) => total + debt.price * (debt.quantity || 1), 0);
   };
+  const totalDebt = users.reduce((total, user) => total + calculateUserDebt(user.id), 0);
 
   const calculateTotalDebt = () => {
     return debts
-      .reduce((total, debt) => total + debt.price * (debt.quantity || 1), 0)
-      .toFixed(2);
+      .reduce((total, debt) => {
+        // Sum up the debt for each user using the same formula for debt calculation
+        const userDebtAmount = debt.price * (debt.quantity || 1);
+        return total + userDebtAmount;
+      }, 0)
+      .toFixed(2); // Format to 2 decimal places
   };
-
+  
+  
   const formatDate = (timestamp) => {
     return timestamp?.seconds
       ? new Date(timestamp.seconds * 1000).toLocaleString()
@@ -187,47 +196,51 @@ function AdminDashboard() {
         </div>
         <div className="stat-card">
           <h3>Total Outstanding Debt</h3>
-          <p>₱{calculateTotalDebt()}</p>
+          <h3>₱{totalDebt.toFixed(2)}</h3>
         </div>
       </div>
-
       <div className="users-table-container">
-        <h2>Registered Users</h2>
-        <table className="users-table">
-          <thead>
-            <tr>
-              <th>Name</th>
-              <th>Email</th>
-              <th>Registration Date</th>
-              <th>Total Debt</th>
-              <th>Actions</th>
-            </tr>
-          </thead>
-          <tbody>
-            {users.map((user) => (
-              <tr key={user.id}>
-                <td>{user.name}</td>
-                <td>{user.email}</td>
-                <td>{formatDate(user.createdAt)}</td>
-                <td>₱{calculateUserDebt(user.id).toFixed(2)}</td>
-                <td>
-                  <button onClick={() => { setSelectedUser(user); setShowDebtForm(true); }} className="add-debt-btn">
-                    Add Debt
-                  </button>
-                  
-                  <button onClick={() => { setSelectedUser(user); setShowMinusDebtForm(true); }} className="minus-debt-btn">
-                    Minus Debt
-                  </button>
+  <h2>Registered Users</h2>
+  <table className="users-table">
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Email</th>
+        <th>Registration Date</th>
+        <th>Total Debt</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      {users.map((user) => (
+        <tr key={user.id}>
+          <td>{user.name}</td>
+          <td>{user.email}</td>
+          <td>{formatDate(user.createdAt)}</td>
+          <td>₱{calculateUserDebt(user.id).toFixed(2)}</td>
+          <td>
+            <button onClick={() => { setSelectedUser(user); setShowDebtForm(true); }} className="add-debt-btn">
+              Add Debt
+            </button>
 
-                  <button onClick={() => navigate(`/view-debt/${user.id}`)} className="view-debt-btn">
-                    View All My Debt
-                  </button>
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
+            <button onClick={() => { setSelectedUser(user); setShowMinusDebtForm(true); }} className="minus-debt-btn">
+              Minus Debt
+            </button>
+
+            <button onClick={() => navigate(`/view-debt/${user.id}`)} className="view-debt-btn">
+              View All My Debt
+            </button>
+          </td>
+        </tr>
+      ))}
+    </tbody>
+  </table>
+
+  {/* Display total debt */}
+  <div className="total-debt-container">
+    <h3>Total Debt: ₱{totalDebt.toFixed(2)}</h3>
+  </div>
+</div>
 
       {showDebtForm && (
         <div className="modal-overlay">
