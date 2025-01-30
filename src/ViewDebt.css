@@ -1,0 +1,39 @@
+/* Container and Background */
+.view-debt-container {
+    max-width: 1200px;
+    margin: 40px auto;
+    padding: 30px;
+    background-color: #f9f9f9; /* Light background for the container */
+    border-radius: 12px; /* Rounded corners for a modern look */
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1); /* Light shadow for depth */
+    font-family: 'Arial', sans-serif;
+  }
+  
+  /* Heading */
+
+  
+  /* Button styling */
+  .back-btn {
+    background-color: #4e73df; /* Blue background for the button */
+    color: white;
+    padding: 12px 25px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    display: block;
+    width: 180px;
+    margin: 30px auto;
+    font-size: 16px;
+    text-align: center;
+    transition: background-color 0.3s, transform 0.3s; /* Smooth transitions */
+  }
+  
+  .back-btn:hover {
+    background-color: #3e5bbf; /* Darker blue when hovering */
+    transform: translateY(-3px); /* Button lift effect */
+  }
+  
+  .back-btn:active {
+    transform: translateY(1px); /* Button pressed effect */
+  }
+  

@@ -1,0 +1,61 @@
+.homepage {
+  font-family: Arial, sans-serif;
+}
+
+.home-nav {
+  display: flex;
+  justify-content: space-between;
+  padding: 10px;
+  background-color: #4CAF50;
+  color: white;
+}
+
+.stats-cards {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 20px;
+}
+
+.stat-card {
+  background-color: #f0f0f0;
+  padding: 20px;
+  border-radius: 5px;
+  width: 30%;
+  text-align: center;
+}
+
+.users-table-container {
+  margin-top: 30px;
+}
+
+.users-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.users-table th,
+.users-table td {
+  padding: 10px;
+  border: 1px solid #ddd;
+  text-align: left;
+}
+
+.view-debt-btn {
+  background-color: #4CAF50;
+  color: white;
+  padding: 5px 10px;
+  border: none;
+  cursor: pointer;
+}
+
+.view-debt-btn:hover {
+  background-color: #45a049;
+}
+
+.logout-btn {
+  background-color: red;
+  color: white;
+  padding: 5px 10px;
+  border: none;
+  cursor: pointer;
+}

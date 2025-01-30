@@ -1,0 +1,151 @@
+/* App.css */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+.container {
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #1a1a1a;
+  padding: 20px;
+}
+
+.login-box {
+  background-color: #2d2d2d;
+  padding: 30px;
+  border-radius: 10px;
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.3);
+  width: 100%;
+  max-width: 400px;
+}
+
+h2 {
+  color: #ffffff;
+  text-align: center;
+  margin-bottom: 30px;
+  font-size: 24px;
+}
+
+.error-message {
+  background-color: #ff44336e;
+  color: #ff4433;
+  padding: 12px;
+  border-radius: 5px;
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+.input-group {
+  margin-bottom: 20px;
+}
+
+label {
+  display: block;
+  color: #ffffff;
+  margin-bottom: 8px;
+  font-size: 14px;
+}
+
+input {
+  width: 100%;
+  padding: 12px;
+  background-color: #3d3d3d;
+  border: 1px solid #4d4d4d;
+  border-radius: 5px;
+  color: #ffffff;
+  font-size: 16px;
+  transition: border-color 0.3s ease;
+}
+
+input:focus {
+  outline: none;
+  border-color: #6b6bff;
+}
+
+.submit-btn {
+  width: 100%;
+  padding: 12px;
+  background-color: #6b6bff;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 16px;
+  transition: background-color 0.3s ease;
+}
+
+.submit-btn:hover {
+  background-color: #5555ff;
+}
+
+.toggle-btn {
+  width: 100%;
+  margin-top: 15px;
+  padding: 12px;
+  background: transparent;
+  border: none;
+  color: #6b6bff;
+  cursor: pointer;
+  font-size: 14px;
+  transition: color 0.3s ease;
+}
+
+.toggle-btn:hover {
+  color: #5555ff;
+}.home-container {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  background-color: #1a1a1a;
+  padding: 20px;
+  color: white;
+}
+
+.home-container h1 {
+  margin-bottom: 20px;
+}.button-group {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-top: 15px;
+}
+
+.button-group {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-top: 15px;
+}
+
+.admin-btn {
+  padding: 10px;
+  background-color: #4a90e2;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.admin-btn:hover {
+  background-color: #357abd;
+}.admin-login-btn {
+  background-color: #ff9800;
+  color: white;
+  padding: 10px;
+  border: none;
+  cursor: pointer;
+  width: 100%;
+  margin-top: 10px;
+  font-size: 16px;
+}
+
+.admin-login-btn:hover {
+  background-color: #e68900;
+}
