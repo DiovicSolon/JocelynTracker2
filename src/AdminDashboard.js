@@ -10,12 +10,13 @@ import {
   updateDoc,
   addDoc,
   serverTimestamp,
-  query,
-  where,
-  getDocs,
+ 
 } from "firebase/firestore";
 import "./AdminDashboard.css";
 import { X } from "lucide-react"; // Import close icon
+// eslint-disable-next-line no-unused-vars
+
+
 
 function AdminDashboard() {
   const [users, setUsers] = useState([]);
