@@ -94,11 +94,11 @@ function Homepage() {
               <div className="debt-info">
                 <h4><CircleDollarSign className="debt-icon-small" /> {debt.title}</h4>
                 {/* Display the formatted debt date */}
-                <p><CalendarDays className="debt-icon-small" /> <strong>Debt Date:</strong> on {(debt.debtDate)}</p>
+                <p><CalendarDays className="debt-icon-small" /> <strong></strong>  {(debt.debtDate)}</p>
 
                 <p><strong>Price:</strong> ₱{debt.price.toFixed(2)}</p>
                 <p><strong>Quantity:</strong> {debt.quantity || 1}</p>
-                <p><strong>Total Amount:</strong> ₱{(debt.price * (debt.quantity || 1)).toFixed(2)}</p>
+                <p><strong>Total:</strong> ₱{(debt.price * (debt.quantity || 1)).toFixed(2)}</p>
               </div>
               <span className={`status-badge ${debt.status}`}>
                 {debt.status === "unpaid" ? "Unpaid" : "Paid"}
