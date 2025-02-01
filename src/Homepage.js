@@ -49,10 +49,11 @@ function Homepage() {
       .reduce((total, debt) => total + debt.price * (debt.quantity || 1), 0);
   };
 
+  // Format the Firestore timestamp into a readable date
   const formatDate = (timestamp) => {
     return timestamp?.seconds
       ? new Date(timestamp.seconds * 1000).toLocaleDateString()
-      : "N/A";
+      : "N/A"; // In case the timestamp is invalid
   };
 
   return (
@@ -91,9 +92,13 @@ function Homepage() {
           debts.map((debt) => (
             <div key={debt.id} className="debt-item">
               <div className="debt-info">
-                <h4><CircleDollarSign className="debt-icon-small" /> {debt.description}</h4>
-                <p><strong>Amount:</strong> ₱{(debt.price * (debt.quantity || 1)).toFixed(2)}</p>
-                <p><CalendarDays className="debt-icon-small" /> <strong>Due Date:</strong> {formatDate(debt.dueDate)}</p>
+                <h4><CircleDollarSign className="debt-icon-small" /> {debt.title}</h4>
+                {/* Display the formatted debt date */}
+                <p><CalendarDays className="debt-icon-small" /> <strong>Debt Date:</strong> on {(debt.debtDate)}</p>
+
+                <p><strong>Price:</strong> ₱{debt.price.toFixed(2)}</p>
+                <p><strong>Quantity:</strong> {debt.quantity || 1}</p>
+                <p><strong>Total Amount:</strong> ₱{(debt.price * (debt.quantity || 1)).toFixed(2)}</p>
               </div>
               <span className={`status-badge ${debt.status}`}>
                 {debt.status === "unpaid" ? "Unpaid" : "Paid"}
