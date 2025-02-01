@@ -11,6 +11,7 @@ function App() {
   const [name, setName] = useState('');
   const [isRegistering, setIsRegistering] = useState(false);
   const [error, setError] = useState('');
+  const [successMessage, setSuccessMessage] = useState('');
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -28,7 +29,8 @@ function App() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError('');
-    
+    setSuccessMessage(''); // Reset the success message
+
     try {
       if (isRegistering) {
         if (!name.trim() || !email.trim() || password.length < 6) {
@@ -53,19 +55,19 @@ function App() {
             lastUpdated: serverTimestamp()
           }
         });
-        
-        alert('Account created successfully!');
-        navigate('/homepage');
+
+        setSuccessMessage('Account created successfully!');
+        setTimeout(() => navigate('/homepage'), 2000); // Navigate after the animation finishes
       } else {
         const userCredential = await signInWithEmailAndPassword(auth, email, password);
         const user = userCredential.user;
-        
+
         await setDoc(doc(db, "users", user.uid), {
           lastLogin: serverTimestamp()
         }, { merge: true });
-        
-        alert('Logged in successfully!');
-        navigate('/homepage');
+
+        setSuccessMessage('Logged in successfully!');
+        setTimeout(() => navigate('/homepage'), 2000); // Navigate after the animation finishes
       }
       
       setEmail('');
@@ -81,11 +83,20 @@ function App() {
     <div className="container">
       <div className="login-box">
         <h2>{isRegistering ? 'Register' : 'Login'}</h2>
+        
         {error && <div className="error-message">{error}</div>}
+
+        {/* Success Message */}
+        {successMessage && (
+          <div className={`success-message ${successMessage ? 'show' : 'hide'}`}>
+            {successMessage}
+          </div>
+        )}
+
         <form onSubmit={handleSubmit}>
           {isRegistering && (
             <div className="input-group">
-              <label>Name:</label>
+              <label className="form-label">Name:</label>
               <input
                 type="text"
                 value={name}
@@ -95,7 +106,7 @@ function App() {
             </div>
           )}
           <div className="input-group">
-            <label>Email:</label>
+            <label className="form-label">Email:</label>
             <input
               type="email"
               value={email}
@@ -104,7 +115,7 @@ function App() {
             />
           </div>
           <div className="input-group">
-            <label>Password:</label>
+            <label className="form-label">Password:</label>
             <input
               type="password"
               value={password}

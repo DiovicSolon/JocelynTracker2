@@ -32,7 +32,7 @@ function AdminLogin() {
         
         <form onSubmit={handleAdminLogin}>
           <div className="input-group">
-            <label>Admin Email:</label>
+            <label className="form-label">Admin Email:</label>
             <input
               type="email"
               value={email}
@@ -42,7 +42,7 @@ function AdminLogin() {
           </div>
           
           <div className="input-group">
-            <label>Admin Password:</label>
+            <label className="form-label">Admin Password:</label>
             <input
               type="password"
               value={password}

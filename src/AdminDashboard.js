@@ -1,5 +1,7 @@
+// AdminDashboard.js
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import { LogOut } from 'lucide-react';
 import { db } from "./firebase";
 import {
   collection,
@@ -13,6 +15,7 @@ import {
   getDocs,
 } from "firebase/firestore";
 import "./AdminDashboard.css";
+import { X } from "lucide-react"; // Import close icon
 
 function AdminDashboard() {
   const [users, setUsers] = useState([]);
@@ -22,6 +25,7 @@ function AdminDashboard() {
   const [showMinusDebtForm, setShowMinusDebtForm] = useState(false);
   const [selectedUser, setSelectedUser] = useState(null);
   const [minusAmount, setMinusAmount] = useState(0);
+  const [selectedDebts, setSelectedDebts] = useState([]);
   const [debtForm, setDebtForm] = useState({
     title: "",
     description: "",
@@ -33,15 +37,10 @@ function AdminDashboard() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    // Real-time listener for users collection
     const unsubscribeUsers = onSnapshot(collection(db, "users"), (snapshot) => {
       setUsers(snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() })));
     });
 
-
-  
-
-    // Real-time listener for debts collection
     const unsubscribeDebts = onSnapshot(collection(db, "debts"), (snapshot) => {
       setDebts(snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() })));
     });
@@ -57,19 +56,9 @@ function AdminDashboard() {
       .filter((debt) => debt.userId === userId && debt.status === "unpaid")
       .reduce((total, debt) => total + debt.price * (debt.quantity || 1), 0);
   };
+
   const totalDebt = users.reduce((total, user) => total + calculateUserDebt(user.id), 0);
 
-  const calculateTotalDebt = () => {
-    return debts
-      .reduce((total, debt) => {
-        // Sum up the debt for each user using the same formula for debt calculation
-        const userDebtAmount = debt.price * (debt.quantity || 1);
-        return total + userDebtAmount;
-      }, 0)
-      .toFixed(2); // Format to 2 decimal places
-  };
-  
-  
   const formatDate = (timestamp) => {
     return timestamp?.seconds
       ? new Date(timestamp.seconds * 1000).toLocaleString()
@@ -115,66 +104,70 @@ function AdminDashboard() {
     }
   };
 
+  const handlePaySelectedDebt = async (debtId, amount) => {
+    try {
+      const debtRef = doc(db, "debts", debtId);
+      const debtDoc = debts.find(d => d.id === debtId);
+      
+      if (!debtDoc) return;
+
+      const currentTotal = debtDoc.price * (debtDoc.quantity || 1);
+      
+      if (amount >= currentTotal) {
+        await updateDoc(debtRef, {
+          status: "paid",
+          total: 0
+        });
+      } else {
+        const newTotal = currentTotal - amount;
+        await updateDoc(debtRef, {
+          total: newTotal,
+          price: newTotal / (debtDoc.quantity || 1)
+        });
+      }
+
+      alert("Payment processed successfully!");
+    } catch (error) {
+      console.error("Error processing payment:", error);
+      setError("Failed to process payment");
+    }
+  };
+
   const handleMinusDebt = async () => {
     if (!selectedUser || minusAmount <= 0) {
       alert("Please enter a valid amount.");
       return;
     }
 
-    const userDebtsQuery = query(
-      collection(db, "debts"),
-      where("userId", "==", selectedUser.id),
-      where("status", "==", "unpaid")
-    );
-
-    const querySnapshot = await getDocs(userDebtsQuery);
-
-    if (querySnapshot.empty) {
-      alert("No unpaid debts for this user.");
-      return;
-    }
-
-    let remainingAmount = parseFloat(minusAmount);
-    let updatedDebts = [...debts];
-
     try {
-      for (let debtDoc of querySnapshot.docs) {
-        if (remainingAmount <= 0) break;
+      let remainingAmount = parseFloat(minusAmount);
+      const selectedDebtsTotal = selectedDebts.reduce((total, debtId) => {
+        const debt = debts.find(d => d.id === debtId);
+        return total + (debt ? debt.total : 0);
+      }, 0);
 
-        const debt = debtDoc.data();
-        const debtRef = doc(db, "debts", debtDoc.id);
-
-        const currentTotal = debt.price * (debt.quantity || 1);
-        let newTotal = currentTotal; // ✅ Initialize newTotal properly
-
-        if (currentTotal <= remainingAmount) {
-          // Mark debt as paid if we can fully cover it
-          await updateDoc(debtRef, { status: "paid", total: 0 });
-          newTotal = 0;
-          remainingAmount -= currentTotal;
-        } else {
-          // Reduce the amount from this debt
-          newTotal = currentTotal - remainingAmount;
-          await updateDoc(debtRef, {
-            price: newTotal / (debt.quantity || 1),
-            total: newTotal,
-          });
-          remainingAmount = 0;
-        }
-
-        // Update local debts state
-        updatedDebts = updatedDebts.map((d) =>
-          d.id === debtDoc.id ? { ...d, total: newTotal, status: newTotal > 0 ? "unpaid" : "paid" } : d
-        );
+      if (remainingAmount > selectedDebtsTotal) {
+        alert("Payment amount exceeds selected debts total.");
+        return;
       }
 
-      setDebts(updatedDebts);
+      for (const debtId of selectedDebts) {
+        if (remainingAmount <= 0) break;
+        
+        const debt = debts.find(d => d.id === debtId);
+        if (debt && debt.status === "unpaid") {
+          const paymentForThisDebt = Math.min(remainingAmount, debt.total);
+          await handlePaySelectedDebt(debtId, paymentForThisDebt);
+          remainingAmount -= paymentForThisDebt;
+        }
+      }
+
       setShowMinusDebtForm(false);
       setMinusAmount(0);
-      alert("Debt successfully reduced!");
+      setSelectedDebts([]);
     } catch (error) {
-      console.error("Error updating debt:", error);
-      setError("Failed to update debt status.");
+      console.error("Error processing payments:", error);
+      setError("Failed to process payments");
     }
   };
 
@@ -183,7 +176,8 @@ function AdminDashboard() {
       <nav className="admin-nav">
         <h1>Admin Dashboard</h1>
         <button onClick={() => navigate("/")} className="logout-btn">
-          Logout
+          <LogOut className="w-5 h-5" />
+          <span>Logout</span>
         </button>
       </nav>
 
@@ -199,48 +193,50 @@ function AdminDashboard() {
           <h3>₱{totalDebt.toFixed(2)}</h3>
         </div>
       </div>
+
       <div className="users-table-container">
-  <h2>Registered Users</h2>
-  <table className="users-table">
-    <thead>
-      <tr>
-        <th>Name</th>
-        <th>Email</th>
-        <th>Registration Date</th>
-        <th>Total Debt</th>
-        <th>Actions</th>
-      </tr>
-    </thead>
-    <tbody>
-      {users.map((user) => (
-        <tr key={user.id}>
-          <td>{user.name}</td>
-          <td>{user.email}</td>
-          <td>{formatDate(user.createdAt)}</td>
-          <td>₱{calculateUserDebt(user.id).toFixed(2)}</td>
-          <td>
-            <button onClick={() => { setSelectedUser(user); setShowDebtForm(true); }} className="add-debt-btn">
-              Add Debt
-            </button>
-
-            <button onClick={() => { setSelectedUser(user); setShowMinusDebtForm(true); }} className="minus-debt-btn">
-              Minus Debt
-            </button>
-
-            <button onClick={() => navigate(`/view-debt/${user.id}`)} className="view-debt-btn">
-              View All My Debt
-            </button>
-          </td>
-        </tr>
-      ))}
-    </tbody>
-  </table>
-
-  {/* Display total debt */}
-  <div className="total-debt-container">
-    <h3>Total Debt: ₱{totalDebt.toFixed(2)}</h3>
-  </div>
-</div>
+        <h2>Registered Users</h2>
+        <table className="users-table">
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>Email</th>
+              <th>Registration Date</th>
+              <th>Total Debt</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            {users.map((user) => (
+              <tr key={user.id}>
+                <td>{user.name}</td>
+                <td>{user.email}</td>
+                <td>{formatDate(user.createdAt)}</td>
+                <td>₱{calculateUserDebt(user.id).toFixed(2)}</td>
+                <td className="action-buttons">
+                  <button onClick={() => { 
+                    setSelectedUser(user); 
+                    setShowDebtForm(true); 
+                  }} className="add-debt-btn">
+                    Add Debt
+                  </button>
+                  <button onClick={() => {
+                    setSelectedUser(user);
+                    const userDebts = debts.filter(d => d.userId === user.id && d.status === "unpaid");
+                    setSelectedDebts(userDebts.map(d => d.id));
+                    setShowMinusDebtForm(true);
+                  }} className="minus-debt-btn">
+                    Minus Debt
+                  </button>
+                  <button onClick={() => navigate(`/view-debt/${user.id}`)} className="view-debt-btn">
+                    View All Debts
+                  </button>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
 
       {showDebtForm && (
         <div className="modal-overlay">
@@ -285,20 +281,59 @@ function AdminDashboard() {
           </div>
         </div>
       )}
-
-      {showMinusDebtForm && (
-        <div className="modal-overlay">
-          <div className="modal-content">
-            <h2>Minus Debt for {selectedUser?.name}</h2>
-            <label>Enter Amount</label>
-            <input type="number" value={minusAmount} onChange={(e) => setMinusAmount(e.target.value)} />
-            <div className="form-buttons">
-              <button onClick={handleMinusDebt} className="submit-btn">Submit</button>
-              <button onClick={() => setShowMinusDebtForm(false)} className="cancel-btn">Cancel</button>
+    
+{showMinusDebtForm && (
+  <div className="modal-overlay">
+    <div className="modal-content">
+      <h2>Minus Debt for {selectedUser?.name}</h2>
+      <button onClick={() => setShowMinusDebtForm(false)} className="close-modal-btn">
+        <X className="close-icon" />
+      </button>
+      <div className="debt-list">
+        {debts
+          .filter(debt => debt.userId === selectedUser?.id && debt.status === "unpaid")
+          .map(debt => (
+            <div key={debt.id} className="debt-item">
+              <input
+                type="checkbox"
+                checked={selectedDebts.includes(debt.id)}
+                onChange={(e) => {
+                  if (e.target.checked) {
+                    setSelectedDebts([...selectedDebts, debt.id]);
+                  } else {
+                    setSelectedDebts(selectedDebts.filter(id => id !== debt.id));
+                  }
+                }}
+              />
+              <span>{debt.title} - ₱{debt.total.toFixed(2)}</span>
+              <button
+                onClick={() => handlePaySelectedDebt(debt.id, debt.total)}
+                className="pay-btn"
+              >
+                Pay Full
+              </button>
             </div>
-          </div>
-        </div>
-      )}
+          ))}
+      </div>
+      <label>Enter Payment Amount</label>
+      <input 
+        type="number" 
+        value={minusAmount} 
+        onChange={(e) => setMinusAmount(e.target.value)}
+        min="0"
+        step="0.01"
+      />
+      <div className="form-buttons">
+        <button onClick={handleMinusDebt} className="submit-btn">Pay Selected</button>
+        <button onClick={() => {
+          setShowMinusDebtForm(false);
+          setSelectedDebts([]);
+          setMinusAmount(0);
+        }} className="cancel-btn">Cancel</button>
+      </div>
+    </div>
+  </div>
+)}
     </div>
   );
 }

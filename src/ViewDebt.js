@@ -27,36 +27,36 @@ function ViewDebt() {
 
   return (
     <div className="view-debt-container">
-      <h2>User's Debt Records</h2>
-      
-      <table className="debt-table">
-        <thead>
-          <tr>
-           
-            <th>Title</th>
-            <th>Description</th>
-            <th>Price</th>
-            <th>Quantity</th>
-            <th>Total</th>
-            <th>Status</th>
-         
-          </tr>
-        </thead>
-        <tbody>
-          {debts.map((debt) => (
-            <tr key={debt.id}>
-             
-              <td>{debt.title}</td>
-              <td>{debt.description}</td>
-              <td>₱{debt.price.toFixed(2)}</td>
-              <td>{debt.quantity}</td>
-              <td>₱{debt.total.toFixed(2)}</td>
-              <td>{debt.status}</td>
-              
+      <h2>My Debt Records</h2>
+
+      {debts.length === 0 ? (
+        <p className="no-debt-message">You don’t have any debts yet.</p>
+      ) : (
+        <table className="debt-table">
+          <thead>
+            <tr>
+              <th>Title</th>
+              <th>Description</th>
+              <th>Price</th>
+              <th>Quantity</th>
+              <th>Total</th>
+              <th>Status</th>
             </tr>
-          ))}
-        </tbody>
-      </table>
+          </thead>
+          <tbody>
+            {debts.map((debt) => (
+              <tr key={debt.id}>
+                <td>{debt.title}</td>
+                <td>{debt.description}</td>
+                <td>₱{debt.price.toFixed(2)}</td>
+                <td>{debt.quantity}</td>
+                <td>₱{(debt.price * (debt.quantity || 1)).toFixed(2)}</td>
+                <td>{debt.status}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      )}
 
       <button onClick={() => window.history.back()} className="back-btn">
         Go Back
