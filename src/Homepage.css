@@ -252,7 +252,7 @@
 .logout-btn {
   display: flex;
   align-items: center;
-  gap: 5px;
+  gap: 6px;
   background-color: #dc2626;
   color: white;
   padding: 8px 12px;
