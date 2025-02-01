@@ -1,70 +1,126 @@
-/* Container and Background */
 .view-debt-container {
   max-width: 1200px;
   margin: 40px auto;
   padding: 30px;
-  background-color: #dfdfdf; /* Light background for the container */
-  border-radius: 12px; /* Rounded corners for a modern look */
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1); /* Light shadow for depth */
+  background-color: #ffffff;
+  border-radius: 12px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
   font-family: 'Arial', sans-serif;
 }
 
 h2 {
   font-size: 24px;
   margin-bottom: 20px;
+  color: #333;
 }
 
-/* Table Styling */
+.table-responsive {
+  overflow-x: auto;
+}
+
 .debt-table {
   width: 100%;
-  border-collapse: collapse;
+  border-collapse: separate;
+  border-spacing: 0 8px;
   margin-bottom: 20px;
-  color: #333;
 }
 
 .debt-table th,
 .debt-table td {
   padding: 12px 15px;
   text-align: left;
-  border-bottom: 10px solid #e0e0e0;
 }
 
 .debt-table th {
-  background-color: #a6a6af;
-  font-weight: bold;
-  padding: 10px;
+  background-color: #f8f9fa;
+  color: #495057;
+  font-weight: 600;
+  border-bottom: 2px solid #dee2e6;
+}
+
+.debt-table tr {
+  background-color: #ffffff;
+  transition: all 0.3s ease;
 }
 
 .debt-table tr:hover {
-  background-color: #f1f1f1;
+  background-color: #f8f9fa;
+  transform: translateY(-2px);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
 
-.debt-table td {
+.edit-input {
+  width: 100%;
+  padding: 8px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
   font-size: 14px;
 }
 
-.debt-table td:nth-child(3),
-.debt-table td:nth-child(5) {
-  color: #00796b;
-  font-weight: bold;
+.action-buttons {
+  display: flex;
+  gap: 8px;
 }
 
-.debt-table td:nth-child(6) {
+.action-buttons button {
+  padding: 6px 12px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: all 0.3s ease;
+}
+
+.edit-btn {
+  background-color: #4e73df;
+  color: white;
+}
+
+.delete-btn {
+  background-color: #e74a3b;
+  color: white;
+}
+
+.save-btn {
+  background-color: #1cc88a;
+  color: white;
+}
+
+.cancel-btn {
+  background-color: #858796;
+  color: white;
+}
+
+.action-buttons button:hover {
+  filter: brightness(90%);
+  transform: translateY(-1px);
+}
+
+.status-badge {
+  padding: 4px 8px;
+  border-radius: 12px;
+  font-size: 12px;
+  font-weight: 500;
   text-transform: capitalize;
 }
 
-.debt-table td,
-.debt-table th {
-  border-radius: 6px;
+.status-badge.pending {
+  background-color: #f6c23e;
+  color: #856404;
 }
 
-.debt-table tbody tr:last-child td {
-  border-bottom: none;
+.status-badge.paid {
+  background-color: #1cc88a;
+  color: #155724;
 }
 
-/* Button Styling */
+.status-badge.overdue {
+  background-color: #e74a3b;
+  color: #721c24;
+}
+
 .back-btn {
-  background-color: #4e73df; /* Blue background for the button */
+  background-color: #4e73df;
   color: white;
   padding: 12px 25px;
   border: none;
@@ -75,48 +131,42 @@ h2 {
   margin: 30px auto;
   font-size: 16px;
   text-align: center;
-  transition: background-color 0.3s, transform 0.3s; /* Smooth transitions */
+  transition: all 0.3s ease;
 }
 
 .back-btn:hover {
-  background-color: #3e5bbf; /* Darker blue when hovering */
-  transform: translateY(-3px); /* Button lift effect */
+  background-color: #2e59d9;
+  transform: translateY(-2px);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
 
-.back-btn:active {
-  transform: translateY(1px); /* Button pressed effect */
+.no-debt-message {
+  text-align: center;
+  padding: 40px;
+  color: #666;
+  font-size: 16px;
 }
 
-/* Responsive Styling */
 @media (max-width: 768px) {
-  .debt-table th, .debt-table td {
-    font-size: 12px;
+  .view-debt-container {
+    padding: 15px;
+    margin: 20px;
   }
 
-  .view-debt-container {
-    padding: 10px;
+  .debt-table th,
+  .debt-table td {
+    padding: 8px;
+  }
+
+  .action-buttons {
+    flex-direction: column;
+  }
+
+  .action-buttons button {
+    width: 100%;
   }
 
   .back-btn {
     width: 100%;
-    padding: 12px;
-    margin-top: 20px;
-  }
-
-  .debt-table {
-    display: block;
-    overflow-x: auto;
-    white-space: nowrap;
-  }
-}
-
-@media (max-width: 480px) {
-  .debt-table th, .debt-table td {
-    padding: 8px;
-    font-size: 12px;
-  }
-
-  h2 {
-    font-size: 20px;
   }
 }
